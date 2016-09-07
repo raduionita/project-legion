@@ -319,19 +319,20 @@ class Layer(object):
         self.neurons      = neurons
         self.distribution = activation if issubclass(activation, Distribution) else distribution
         self.activation   = activation if issubclass(activation, Activation) else None
-        
+
     def __getitem__(self, item):
         pass
 
 
 class Builder(object):
     builder  = None
+    # activations
     TANH     = TanhActivation
     LINEAR   = LinearActivation
     RELU     = ReluActivation
     SIGMOID  = SigmoidActivation
     SOFTPLUS = SoftplusActivation
-    
+    #distributions
     UNIFORM  = UniformDistribution
 
     def __init__(self):
@@ -380,6 +381,7 @@ class Builder(object):
                 # apply distribution on neuron weights
                 if l < _num_layers-1 and self.layers[l].distribution is not None:
                     _neuron = self.layers[l].distribution.apply(_neuron)
+
                 # setup neuron activation functions
                 if l > 0:
                     _neuron.activate = self.layers[l].activation.activate
