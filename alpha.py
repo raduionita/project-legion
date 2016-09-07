@@ -66,6 +66,11 @@ class DiscountInput(NumericalInput):
         super().__init__(input)
 
 
+# log normalization: z = x * y => ln(z) = ln(x) + ln(y)
+
+# min-max normalization
+
+
 ########################################################################################################################
 # Neural Network
 
@@ -98,9 +103,9 @@ class Neuron(object):
 
 
 class Network(object):
-    eta   = 0.2
-    alpha = 0.5
-    scale = 0.05
+    eta   = 0.9
+    alpha = 0.9
+    scale = 1.0
 
     def __init__(self):
         self.layers    = []
@@ -397,25 +402,19 @@ class Builder(object):
 ########################################################################################################################
 # Testing
 
-nn = Builder.instance().add(Layer(3, Builder.UNIFORM)).add(Layer(6, Builder.RELU, Builder.UNIFORM)).add(Layer(1, Builder.RELU)).compile()
-m = 5
-for i in range(20000):   # +
+nn = Builder.instance().add(Layer(2, Builder.UNIFORM)).add(Layer(1, Builder.SIGMOID, Builder.UNIFORM)).add(Layer(1, Builder.SIGMOID)).compile()
+m = 1
+for i in range(100):   # +
     a  = random.randint(0, m)
     b  = random.randint(0, m)
-    c  = random.randint(0, m)
-    t  = (a * b * c)
-    a /= m
-    b /= m
-    c /= m
-    t /= m**3
-    o, = nn.train((a, b, c), (t,))
-    #print('train  ', (a*m, b*m, c*m), (a*m * b*m * c*m), [o*m**3], ' error ', nn.error)
-for _ in range(3):
-    a  = random.randint(0, m)/m
-    b  = random.randint(0, m)/m
-    c  = random.randint(0, m)/m
-    o, = nn.predict((a, b, c))
-    print('predict', (a*m, b*m, c*m), (a*m * b*m * c*m), [o*m**3])
+    t  = (a or b)
+    o, = nn.train((a, b), (t,))
+    print('train  ', (a, b), (a or b), [o], ' error ', nn.error)
+for _ in range(4):
+    a  = random.randint(0, m)
+    b  = random.randint(0, m)
+    o, = nn.predict((a, b))
+    print('predict', (a, b), (a or b), [o])
 
 ########################################################################################################################
 # Notes
