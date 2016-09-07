@@ -103,9 +103,9 @@ class Neuron(object):
 
 
 class Network(object):
-    eta   = 0.9
-    alpha = 0.9
-    scale = 1.0
+    eta   = 0.9  # learning rate - too low and it will take forever, too big and it will oscillate forever
+    alpha = 0.9  # momentum - how much of the previous value should be taken in account
+    scale = 1.0  # weight scale
 
     def __init__(self):
         self.layers    = []
